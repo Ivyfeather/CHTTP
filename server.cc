@@ -1,4 +1,5 @@
 #include "common.hh"
+#include "log.hh"
 
 #define LEN 4000
 #define TEST 0
@@ -46,15 +47,7 @@ int main(int argc, const char *argv[])
     while ((msg_len = recv(cs, msg, sizeof(msg), 0)) > 0) {
 		printf("\n\"%s\"", msg);
 
-		
-
-        // if(server_decode(msg, filename)== -1)
-		// 	continue;
-		// data_transmission(filename, cs);
-		data_transmission("server.cpp", cs);
-
-		//////
-		//////close(cs);
+		send_file("server.cc", cs);
     }
 	// =======================================
 
@@ -95,15 +88,7 @@ int main(int argc, const char *argv[])
 // 	printf(" - Unknown Method\n");
 // 	return -1;
 // }
-
-// get file size
-int file_size(FILE *fp) {
-	fseek(fp, 0, SEEK_END);
-	int FileLen = ftell(fp);
-	fseek(fp, 0, SEEK_SET);
-	return FileLen;
-}
-
+/*
 int data_transmission(char *name, int cs){
 	FILE *fp;
 	if( (fp = fopen(name, "rb")) == NULL ){
@@ -145,4 +130,4 @@ int data_transmission(char *name, int cs){
 
 	return 0;
 }
-
+*/
