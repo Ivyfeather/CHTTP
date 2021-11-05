@@ -15,7 +15,7 @@ int main(int argc, const char *argv[])
         perror("create socket failed");
 		return -1;
     }
-    printf("socket created");
+    LOG(INFO, "socket created");
      
     // prepare the sockaddr_in structure
     server.sin_family = AF_INET;
@@ -27,11 +27,11 @@ int main(int argc, const char *argv[])
         perror("bind failed");
         return -1;
     }
-    printf("bind done");
+    LOG(INFO, "bind done");
      
     // listen
     listen(s, 3);
-    printf("waiting for incoming connections...");
+    LOG(INFO, "waiting for incoming connections...");
      
     // accept connection from an incoming client
     int c = sizeof(struct sockaddr_in);
@@ -39,20 +39,34 @@ int main(int argc, const char *argv[])
         perror("accept failed");
         return -1;
     }
-    printf("connection accepted");
+    LOG(INFO, "connection accepted");
     
 	// ========== HTTP SERVER ================
 	int msg_len = 0;
     // receive a message from client
     while ((msg_len = recv(cs, msg, sizeof(msg), 0)) > 0) {
-		printf("\n\"%s\"", msg);
+		LOG(DEBUG, "\n\"%s\"", msg);
+		
+		header *hd = http_decoder(msg);
+		int method = hd->method;
 
-		send_file("server.cc", cs);
+		if(method == GET){
+			//!! temporarily removing the first '/' at url
+			hd->url=hd->url+1;
+			send_file(hd->url, cs);
+		}else if(method == POST){
+			LOG(ERROR, "POST ");
+		}else{
+			LOG(WARNING, "Unknown HTTP Method.");
+		}
+		
+		LOG(INFO, "Reciving HTTP request: %s:%d - %s",\
+			inet_ntoa(client.sin_addr),ntohs(client.sin_port),hd->method);
     }
 	// =======================================
 
     if (msg_len == 0) {
-        printf("client disconnected");
+        LOG(INFO, "client disconnected");
     }
     else { // msg_len < 0
     	perror("recv failed");
@@ -64,70 +78,3 @@ int main(int argc, const char *argv[])
 
 // HTTP/1.0 404 File not found\r\n\r\n
 // HTTP/1.1 404 File not found\r\n\r\n
-
-// get method and filename from HTTP message
-// int server_decode(char *str, char *filename){
-// 	char method[10], name[LEN], rest[LEN];
-	
-// #if TEST 
-// 	printf("recv: %s",str);
-// #endif
-// 	// get method, severing at " "
-// 	sever(str, method, rest, ' ');
-
-// 	// GET method
-// 	if( strcmp(method, "GET") == 0){
-// 		sever(rest, name, rest, ' ');
-// #if TEST 
-// 		printf("name: %s\n",name + 1);
-// #endif
-// 		strcpy(filename, name + 1);// skip the first /
-// 		return 0;
-// 	}
-	
-// 	printf(" - Unknown Method\n");
-// 	return -1;
-// }
-/*
-int data_transmission(char *name, int cs){
-	FILE *fp;
-	if( (fp = fopen(name, "rb")) == NULL ){
-		// 404 File Not Found
-
-		printf(" - 404 File Not Found\n");
-
-		char *N404 = "HTTP/1.1 404 File not found\r\n\r\n";
-		write(cs, N404, strlen(N404));
-		return -1;
-	}
-
-	printf(" - 200 OK\n");
-
-	// send message
-	//   Host
-	char *OK = "HTTP/1.1 200 OK\r\n";
-	write(cs, OK, strlen(OK));
-	
-	//   Head
-	char head[100];
-	snprintf(head, 100, "Content-Length: %d\r\n\r\n", file_size(fp));
-	write(cs, head, strlen(head));
-
-	//   Body
-	char buff[LEN + 1];
-	int ReadCount;
-	while( (ReadCount = fread(buff, 1, LEN, fp)) > 0 ) {
-		write(cs, buff, ReadCount);
-#if TEST
-		printf("ReadCount: %d\n",ReadCount);
-		printf("%s", buff);
-#endif
-	}
-#if TEST
-	printf("Send Complete\n");
-#endif
-	fclose(fp);
-
-	return 0;
-}
-*/

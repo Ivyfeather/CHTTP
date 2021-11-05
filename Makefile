@@ -2,10 +2,12 @@ CC := gcc
 CXX := g++
 CFLAGS := -Wall
 
-source := server.cc chttp_act.cc
+#source := server.cc chttp_act.cc
+INCLUDE := $(wildcard *.hh)
+SRCS := $(wildcard *.cc)
 
-server: $(source)
-	$(CXX) -o server $(source)
+server: $(SRCS) $(INCLUDE)
+	$(CXX) $(CFLAGS) -o server $(SRCS)
 
 clean:
 	rm -rf sever

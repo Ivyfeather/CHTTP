@@ -13,7 +13,7 @@ int send_file(char *name, int cs){
 	FILE *fp = NULL;
 	// file not found
 	if( (fp = fopen(name, "rb")) == NULL ){
-		log(INFO, "file %s does not exist.\n", name);
+		LOG(INFO, "file %s does not exist.\n", name);
 		char *N404 = "HTTP/1.1 404 File not found\r\n\r\n";
 		write(cs, N404, strlen(N404));
 		return -1;
@@ -32,5 +32,5 @@ int send_file(char *name, int cs){
 	}
 
 	fclose(fp);
-
+	return 0;
 }

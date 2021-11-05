@@ -10,9 +10,26 @@
 #include <unistd.h>
 
 #define FILE_BUFF_LEN 4000
-// from chttp_act.cc
+enum http_method {UNKNOWN = 0, GET, POST};
+typedef struct _option{
+    char *key;
+    char *value;
+    _option *next;
+}option;
+
+typedef struct _header{
+    int method;
+    char *url;
+    int version;
+    option *options;
+}header;
+
+
+// from get
 int send_file(char *name, int cs);
 int file_size(FILE *fp);
 
+// from parser
+header *http_decoder(char *str);
 
 #endif 

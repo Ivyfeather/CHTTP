@@ -7,14 +7,10 @@
 
 // #define LOG_DEBUG
 
-// #define DEBUG 0
-// #define INFO 1
-// #define WARNING 2
-// #define ERROR 3
 enum log_level { DEBUG = 0, INFO, WARNING, ERROR };
 
 // shows logs >= this_log_level
-static enum log_level this_log_level = INFO;
+static enum log_level this_log_level = DEBUG;
 
 static const char *log_level_str[] = { "DEBUG", "INFO", "WARNING", "ERROR" };
 
@@ -27,7 +23,7 @@ static const char *log_level_str[] = { "DEBUG", "INFO", "WARNING", "ERROR" };
 		fprintf(stderr, "%s: " fmt "\n", level_str, ##__VA_ARGS__);
 #endif
 
-#define log(level, fmt, ...) \
+#define LOG(level, fmt, ...) \
 	do { \
 		if (level < this_log_level) \
 			break; \
