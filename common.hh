@@ -9,8 +9,14 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-#define FILE_BUFF_LEN 4000
+// returns a pointer to a new allocated type
+#define MALLOC(type) (type *)malloc(sizeof(type))
+
+#define FILE_BUFF_LEN 10000
+
 enum http_method {UNKNOWN = 0, GET, POST};
+extern char *method_str[3];
+
 typedef struct _option{
     char *key;
     char *value;
@@ -22,6 +28,7 @@ typedef struct _header{
     char *url;
     int version;
     option *options;
+    char *content;
 }header;
 
 
@@ -31,5 +38,5 @@ int file_size(FILE *fp);
 
 // from parser
 header *http_decoder(char *str);
-
+void print_options(header *hd);
 #endif 

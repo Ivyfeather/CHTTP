@@ -8,7 +8,7 @@ int main(int argc, const char *argv[])
 {
     int s, cs;
     struct sockaddr_in server, client;
-    char msg[LEN], filename[LEN];
+    char msg[LEN];
      
     // create socket
     if ((s = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -47,21 +47,28 @@ int main(int argc, const char *argv[])
     while ((msg_len = recv(cs, msg, sizeof(msg), 0)) > 0) {
 		LOG(DEBUG, "\n\"%s\"", msg);
 		
+        //!! CAUTION: FOR NOW ALL HTTP REQUEST MUST BE IN ONE PACKET
 		header *hd = http_decoder(msg);
 		int method = hd->method;
+
+        print_options(hd);
 
 		if(method == GET){
 			//!! temporarily removing the first '/' at url
 			hd->url=hd->url+1;
 			send_file(hd->url, cs);
 		}else if(method == POST){
-			LOG(ERROR, "POST ");
+			
 		}else{
 			LOG(WARNING, "Unknown HTTP Method.");
 		}
 		
+
+        // free hd and options
+
 		LOG(INFO, "Reciving HTTP request: %s:%d - %s",\
-			inet_ntoa(client.sin_addr),ntohs(client.sin_port),hd->method);
+			inet_ntoa(client.sin_addr),ntohs(client.sin_port),\
+            method_str[hd->method]);
     }
 	// =======================================
 
@@ -77,4 +84,4 @@ int main(int argc, const char *argv[])
 }
 
 // HTTP/1.0 404 File not found\r\n\r\n
-// HTTP/1.1 404 File not found\r\n\r\n
+// HTTP/1.1 404 File not found\r\n\r\nx
