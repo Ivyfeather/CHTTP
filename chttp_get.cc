@@ -11,6 +11,10 @@ int file_size(FILE *fp) {
 
 int send_file(char *name, int cs){
 	FILE *fp = NULL;
+	if(name[0]=='\0'){
+		name = "login.html";
+	}
+
 	// file not found
 	if( (fp = fopen(name, "rb")) == NULL ){
 		LOG(INFO, "file %s does not exist.\n", name);

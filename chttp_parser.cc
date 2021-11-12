@@ -52,7 +52,28 @@ header *http_decoder(char *str){
     hd->options->next = NULL;
     option *prev_op = hd->options; 
     char *op_str;
+    int found_content_length = 0;
+    int found_keep_alive = 0;
+
     while((op_str = strsep(&str, "\n"))!=NULL && op_str[0]!='\r'){
+        char *key = strsep(&op_str, ": ");
+        char *val = op_str;
+        val[strlen(val)-1]='\0';
+
+        if(!found_content_length && strcmp(key, "Content-Length")==0){
+            hd->content_length = atoi(val);
+            found_content_length = 1;
+        }
+        if(!found_keep_alive && strcmp(key, "keep-alive")==0){
+            hd->keep_alive = 1;
+            found_keep_alive = 1;
+        }
+
+        if(found_keep_alive && found_content_length){
+            break;
+        }
+        
+        /*
         option *new_op = MALLOC(option);
         prev_op->next = new_op;    
     
@@ -60,8 +81,10 @@ header *http_decoder(char *str){
         new_op->value = op_str;
         new_op->next = NULL;
         prev_op = new_op;
+        */
     }
 
+    // the rest is content
     hd->content = str;
 
     return hd;

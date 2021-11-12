@@ -51,14 +51,14 @@ int main(int argc, const char *argv[])
 		header *hd = http_decoder(msg);
 		int method = hd->method;
 
-        print_options(hd);
+        // print_options(hd);
 
 		if(method == GET){
 			//!! temporarily removing the first '/' at url
 			hd->url=hd->url+1;
 			send_file(hd->url, cs);
 		}else if(method == POST){
-			
+			echo_post(hd, cs);
 		}else{
 			LOG(WARNING, "Unknown HTTP Method.");
 		}
