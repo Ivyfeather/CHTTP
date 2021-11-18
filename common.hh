@@ -12,6 +12,7 @@
 // returns a pointer to a new allocated type
 #define MALLOC(type) (type *)malloc(sizeof(type))
 
+#define SOCK_BUFF_LEN 4000
 #define FILE_BUFF_LEN 10000
 
 enum http_method {UNKNOWN = 0, GET, POST};
@@ -27,7 +28,6 @@ typedef struct _header{
     int method;
     char *url;
     int version;
-    option *options;
     int content_length;
     int keep_alive;
     char *content;
@@ -40,8 +40,9 @@ int file_size(FILE *fp);
 
 // from parser
 header *http_decoder(char *str);
-void print_options(header *hd);
 
 // from POST
 int echo_post(header *hd, int cs);
+int receive_file(header *hd, int cs);
+
 #endif 

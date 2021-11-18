@@ -37,6 +37,7 @@ header *http_decoder(char *str){
     }else{
         hd->method = UNKNOWN;
         LOG(WARNING, "Unsupported method %s", method);
+        return NULL;
     }
 
     // parse url
@@ -48,9 +49,6 @@ header *http_decoder(char *str){
     }
 
     // parse options
-    hd->options = MALLOC(option);
-    hd->options->next = NULL;
-    option *prev_op = hd->options; 
     char *op_str;
     int found_content_length = 0;
     int found_keep_alive = 0;
@@ -72,26 +70,10 @@ header *http_decoder(char *str){
         if(found_keep_alive && found_content_length){
             break;
         }
-        
-        /*
-        option *new_op = MALLOC(option);
-        prev_op->next = new_op;    
-    
-        new_op->key = strsep(&op_str, ": ");
-        new_op->value = op_str;
-        new_op->next = NULL;
-        prev_op = new_op;
-        */
     }
 
     // the rest is content
     hd->content = str;
 
     return hd;
-}
-
-void print_options(header *hd){
-    for(option *it=hd->options->next; it!=NULL; it=it->next){
-        printf("%s: %s\n", it->key, it->value);
-    }
 }
