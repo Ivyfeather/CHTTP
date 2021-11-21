@@ -4,10 +4,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include <sys/socket.h>
-#include <arpa/inet.h>
 #include <unistd.h>
+
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
+#define CHUNKED
+
+#ifdef HTTPS
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+#endif
 
 // returns a pointer to a new allocated type
 #define MALLOC(type) (type *)malloc(sizeof(type))
@@ -33,16 +42,18 @@ typedef struct _header{
     char *content;
 }header;
 
-
-// from get
-int send_file(char *name, int cs);
+header *http_decoder(char *str);
 int file_size(FILE *fp);
 
-// from parser
-header *http_decoder(char *str);
+int send_file(char *name, void *net);
+int receive_file(header *hd, void *net);
 
-// from POST
-int echo_post(header *hd, int cs);
-int receive_file(header *hd, int cs);
+#ifndef HTTPS
+    #define WRITE(to, str, len) write(to, str, len)
+    #define READ(from, str, len) read(from, str, len)
+#else
+    #define WRITE(to, str, len) SSL_write(to, str, len)
+    #define READ(from, str, len) SSL_read(from, str, len)
+#endif
 
-#endif 
+#endif // __COMMON_H_

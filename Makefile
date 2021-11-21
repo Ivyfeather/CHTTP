@@ -6,8 +6,11 @@ CFLAGS := -Wall -Wno-write-strings -g
 INCLUDE := $(wildcard *.hh)
 SRCS := $(wildcard *.cc)
 
-server: $(SRCS) $(INCLUDE)
+http: $(SRCS) $(INCLUDE)
 	$(CXX) $(CFLAGS) -o server $(SRCS)
+
+https: $(SRCS) $(INCLUDE)
+	$(CXX) $(CFLAGS) -DHTTPS -o server $(SRCS) -lssl -lcrypto
 
 clean:
 	rm -rf sever
