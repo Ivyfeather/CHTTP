@@ -11,7 +11,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#define CHUNKED
+// #define CHUNKED
 
 #ifdef HTTPS
 #include <openssl/ssl.h>

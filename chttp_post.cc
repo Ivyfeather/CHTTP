@@ -31,15 +31,15 @@ int receive_file(header *hd, void *net){
         file_len -= msg_len;
     }
 
-    int filesize = file_size(fp);
+    // int filesize = file_size(fp);
     fclose(fp);
 
     // return HTTP 200 OK
-    char buff[100];
-    snprintf(buff, 100, "HTTP/1.1 200 OK\r\n\r\n");
+    char buff[200];
+    char reply[100];
+    snprintf(reply, 100, "File Received");
+    snprintf(buff, 100, "HTTP/1.1 200 OK\r\nContent-Length: %lu\r\n\r\n%s", strlen(reply), reply);
 	WRITE(from, buff, strlen(buff));
-
-    
 
     return 0;
 }

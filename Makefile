@@ -1,6 +1,7 @@
 CC := gcc
 CXX := g++
-CFLAGS := -Wall -Wno-write-strings -g
+CFLAGS := $(FLAGS) 
+CFLAGS += -Wall -Wno-write-strings -g
 
 #source := server.cc chttp_act.cc
 INCLUDE := $(wildcard *.hh)

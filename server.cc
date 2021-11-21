@@ -129,8 +129,10 @@ int main(int argc, const char *argv[])
 		LOG(DEBUG, "\n\"%s\"", msg);
 		
         //!! CAUTION: FOR NOW ALL HTTP REQUEST MUST BE IN ONE PACKET
-		hd = http_decoder(msg);
-		int method = hd->method;
+		if((hd = http_decoder(msg)) == NULL){
+            continue;
+        };
+        int method = hd->method;
         
 		LOG(INFO, "Reciving %s request: %s:%d - %s",\
 			(https)?"HTTPS":"HTTP", inet_ntoa(client.sin_addr),\
