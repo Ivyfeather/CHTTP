@@ -107,6 +107,7 @@ function addresslist() {
 	for a in $(getipaddresses); do
 		ALIST="${ALIST}IP:$a,"
 	done
+	ALIST="${ALIST}IP:121.36.6.100,"
 	ALIST="${ALIST}IP:127.0.0.1,IP:::1,"
 
 	for ip in $(echo ${ALTADDRESSES}); do
@@ -115,7 +116,7 @@ function addresslist() {
 	for h in $(echo ${ALTHOSTNAMES}); do
 		ALIST="${ALIST}DNS:$h,"
 	done
-	ALIST="${ALIST}DNS:localhost"
+	ALIST="${ALIST}DNS:ecs-net"
 	echo $ALIST
 
 }
