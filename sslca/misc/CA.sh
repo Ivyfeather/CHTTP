@@ -100,6 +100,9 @@ function getipaddresses() {
 		egrep -v '(::1|127\.0\.0\.1)'	# omit loopback to add it later
 }
 
+#	!! ADD YOUR PUBLIC IP ADDR HERE
+#	!! ADD YOUR PUBLIC IP ADDR HERE
+#	!! ADD YOUR PUBLIC IP ADDR HERE
 
 function addresslist() {
 

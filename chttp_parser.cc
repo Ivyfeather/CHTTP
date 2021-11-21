@@ -62,7 +62,7 @@ header *http_decoder(char *str){
             hd->content_length = atoi(val);
             found_content_length = 1;
         }
-        if(!found_keep_alive && strcmp(key, "keep-alive")==0){
+        if(!found_keep_alive && strcmp(val, "keep-alive")==0){
             hd->keep_alive = 1;
             found_keep_alive = 1;
         }

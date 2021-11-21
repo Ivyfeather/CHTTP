@@ -128,7 +128,7 @@ int main(int argc, const char *argv[])
     while ((msg_len = READ(tmp, msg, sizeof(msg))) > 0) {
 		LOG(DEBUG, "\n\"%s\"", msg);
 		
-        //!! CAUTION: FOR NOW ALL HTTP REQUEST MUST BE IN ONE PACKET
+        //!! We assume http header in one packet
 		if((hd = http_decoder(msg)) == NULL){
             continue;
         };
